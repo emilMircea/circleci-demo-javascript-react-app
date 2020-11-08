@@ -6,4 +6,15 @@ version: 2.1
 workflows:
   app-tests:
     jobs:
-      - node/test
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run: yarn test
+
+      - run: yarn build
+
+      - run: yarn netlify:deploy
